@@ -6,6 +6,10 @@
 
         <v-spacer></v-spacer>
 
+        <v-btn icon @click="changeLocate('pt')"> PT </v-btn>
+        <v-btn icon @click="changeLocate('es')"> ES </v-btn>
+        <v-btn icon @click="changeLocate('en')"> EN </v-btn>
+
         <v-btn icon>
           <v-icon>mdi-information-outline</v-icon>
         </v-btn>
@@ -14,7 +18,19 @@
       <v-container>
         <br />
 
-        <v-select :items="items"  v-model="selectedEscola"  item-text="text"  item-value="value" label="Escolas" solo @change="getPontos()"></v-select>
+        <v-alert color="blue" type="success">
+          {{ $t("fields.texto") }}
+        </v-alert>
+
+        <v-select
+          :items="items"
+          v-model="selectedEscola"
+          item-text="text"
+          item-value="value"
+          label="Escolas"
+          solo
+          @change="getPontos()"
+        ></v-select>
 
         <v-simple-table>
           <template v-slot:default>
@@ -119,7 +135,7 @@ export default {
       alunos: null,
       openModalAdd: false,
       idAluno: null,
-      selectedEscola: []
+      selectedEscola: [],
     };
   },
 
@@ -147,9 +163,11 @@ export default {
         });
     },
     async getPontos() {
-      console.log(this.selectedEscola)
+      console.log(this.selectedEscola);
       this.alunos = await axios
-        .get("http://127.0.0.1:3000/ranking/"+this.selectedEscola, { crossDomain: true })
+        .get("http://127.0.0.1:3000/ranking/" + this.selectedEscola, {
+          crossDomain: true,
+        })
         .then(function (response) {
           console.log(response.data);
           return response.data;
@@ -157,6 +175,11 @@ export default {
         .catch(function (error) {
           console.error(error);
         });
+    },
+
+    changeLocate(locate) {
+      console.log(locate);
+      this.$i18n.locale = locate;
     },
   },
 };
